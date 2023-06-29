@@ -48,7 +48,8 @@ class Product extends Controller
 
         $order= new Order();
         $order->status='unpaid';
-        $order->total_price=
+        $order->total_price=$total_price;
+        $order->session_id=$checkout_session->id;
         return redirect($checkout_session->url);
     }
 
