@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Mockery\Exception;
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Product extends Controller
 {
@@ -16,13 +20,14 @@ class Product extends Controller
         return view('product.index', compact('products'));
     }
 
-    public function checkout(Request $request)
+    public function checkout()
     {
         $stripe = new StripeClient(env('STRIPE_SECRETKEY'));
 
         $products = \App\Models\Product::all();
         $total_price=0;
         foreach ($products as $product) {
+            $total_price=+$product->price;
             $lineItems[] = [
 
                 'price_data' => [
@@ -42,7 +47,7 @@ class Product extends Controller
         $checkout_session = $stripe->checkout->sessions->create([
             'line_items' => [$lineItems],
             'mode' => 'payment',
-            'success_url' => route('checkout.success', [], true),
+            'success_url' => route('checkout.success', [], true)."?session_id={CHECKOUT_SESSION_ID}",
             'cancel_url' => route('checkout.cancel',[],true),
         ]);
 
@@ -50,6 +55,7 @@ class Product extends Controller
         $order->status='unpaid';
         $order->total_price=$total_price;
         $order->session_id=$checkout_session->id;
+        $order->save();
         return redirect($checkout_session->url);
     }
 
@@ -58,11 +64,30 @@ class Product extends Controller
 
     }
 
-    public function success()
+    /**
+     * @throws ApiErrorException
+     */
+    public function success(Request $request)
     {
+        $stripe = new StripeClient(env('STRIPE_SECRETKEY'));
+        $sessionId = $request->get('session_id');
+        $session = $stripe->checkout->sessions->retrieve($sessionId);
+
+        if (!$session) {
+            throw new Exception('Session not found');
+        }
+        $customer = $session->customer_details;
 
 
+
+
+        if (!$customer) {
+            throw new NotFoundHttpException('Customer not found');
+        }
+
+        return view('product.checkout.success', compact('customer'));
     }
+
 
     /**
      * Show the form for creating a new resource.

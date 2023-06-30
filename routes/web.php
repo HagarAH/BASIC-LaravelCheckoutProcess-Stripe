@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\Product::class, 'index']);
 Route::post('/checkout',[\App\Http\Controllers\Product::class,'checkout'])->name('checkout');
-Route::post('/success',[\App\Http\Controllers\Product::class,'checkout'])->name('checkout.success');
-Route::post('/cancel',[\App\Http\Controllers\Product::class,'checkout'])->name('checkout.cancel');
+Route::get('/success',[\App\Http\Controllers\Product::class,'success'])->name('checkout.success');
+Route::get('/cancel',[\App\Http\Controllers\Product::class,'cancel'])->name('checkout.cancel');
