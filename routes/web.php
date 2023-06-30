@@ -17,3 +17,4 @@ Route::get('/', [\App\Http\Controllers\Product::class, 'index']);
 Route::post('/checkout',[\App\Http\Controllers\Product::class,'checkout'])->name('checkout');
 Route::get('/success',[\App\Http\Controllers\Product::class,'success'])->name('checkout.success');
 Route::get('/cancel',[\App\Http\Controllers\Product::class,'cancel'])->name('checkout.cancel');
+Route::post('/cancel',[\App\Http\Controllers\Product::class,'webhook'])->name('checkout.webhook');

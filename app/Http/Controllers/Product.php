@@ -71,21 +71,32 @@ class Product extends Controller
     {
         $stripe = new StripeClient(env('STRIPE_SECRETKEY'));
         $sessionId = $request->get('session_id');
-        $session = $stripe->checkout->sessions->retrieve($sessionId);
 
-        if (!$session) {
-            throw new Exception('Session not found');
+        try{
+            $session = $stripe->checkout->sessions->retrieve($sessionId);
+            if(!$session){
+                throw NotFoundHttpException();
+            }
+            $customer = $session->customer_details;
+
+
         }
-        $customer = $session->customer_details;
 
-
-
-
-        if (!$customer) {
-            throw new NotFoundHttpException('Customer not found');
+        catch(Exception $e){
+        throw new NotFoundHttpException();
         }
+
+        $order=Order::where('session_id',$session->id)->where('status','unpaid')->first();
+        if(!$order){
+            throw new NotFoundHttpException();
+        }
+        $order->status='paid';
+        $order->save();
 
         return view('product.checkout.success', compact('customer'));
+    }
+    public function webhook(){
+
     }
 
 
