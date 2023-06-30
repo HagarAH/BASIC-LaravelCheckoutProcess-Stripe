@@ -23,10 +23,20 @@
     <div class="max-h-screen ">
         <div class="flex-col h-[38.6rem] overflow-hidden overflow-y-visible mt-2 mx-10 z-10 bg-white">
             @foreach($products as $product)
-                <div>
+                <div class="m-2 my-2 border-black border-2 flex justify-between">
                     <img src="{{$product->image}}" class="max-w-xs"/>
-                    <p>{{$product->name}}</p>
-                    <p>{{$product->price}}</p>
+                    <div class=" flex">
+                        <p>{{$product->name}}</p>
+
+                    </div>
+                    <div class="border-black border-l p-2">
+                        <div class="font-semibold text-lg">
+                            <p>{{$product->price}}</p>
+                        </div>
+                    </div>
+
+
+
                     @php
                         $total += $product->price;
                     @endphp
