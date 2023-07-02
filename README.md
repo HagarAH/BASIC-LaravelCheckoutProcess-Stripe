@@ -10,5 +10,6 @@ STRIPE_SECRETKEY=#API secret key#
 STRIPE_WEBHOOK_SECRET=#WEBHOOK secret key#
 </li>
 
-
 </ul>
+
+<p>Don't forget to npm install and npm run build!</p>
