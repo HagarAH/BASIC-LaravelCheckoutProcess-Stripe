@@ -11,6 +11,5 @@ STRIPE_WEBHOOK_SECRET=#WEBHOOK secret key#
 </li>
 
 </ul>
-<img src="https://firebasestorage.googleapis.com/v0/b/portfoilo-e2068.appspot.com/o/Hagar2.webp?alt=media&token=3f91e74e-57be-42df-8d82-bdc3c3bc79e4">
 
 <p>Don't forget to npm install and npm run build!</p>
